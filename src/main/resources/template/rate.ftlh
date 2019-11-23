@@ -25,8 +25,8 @@
                     <input type="radio" id="star1" name="rate" value="1"/>
                     <label for="star1" title="text">1 star</label>
                 </div>
-                <input id="id" type="hidden" value="${id!0}">
-                <input type="submit" value="Submit rating">
+                <input name="id" id="id" type="hidden" value="${id!0}">
+                <input type="submit" value="Submit rating" class="page-link-wrap">
             </form>
         </div>
     </section>
