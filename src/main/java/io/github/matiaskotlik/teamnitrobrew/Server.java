@@ -202,12 +202,9 @@ public class Server {
 
 		get("/rate", (req, res) -> {
 			String id = req.queryParams("id");
-			Account acc = accountDatabase.getAll().stream().filter(a -> a.getId().equals(id)).findAny().orElse(null);
-			if (acc != null) {
-				acc.updateAvgRating(Integer.parseInt(req.queryParams("rate")));
-			}
-			res.redirect("/");
-			return "";
+			Map<String, Object> map = getBase(req);
+			map.put("id", id);
+			return render(map, "rate.ftlh");
 		});
 
 		post("/rate", (req, res) -> {

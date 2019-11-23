@@ -71,6 +71,7 @@ public class Account {
 		this.hashedPassword = hashedPassword;
 	}
 
+	@JsonIgnore
 	public double getAvgRating() {
 		return ratings.stream().reduce(Integer::sum).orElse(0) / ((double) ratings.size());
 	}
