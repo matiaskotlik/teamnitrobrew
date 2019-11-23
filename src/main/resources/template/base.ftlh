@@ -1,12 +1,21 @@
-<#macro page_head>
+<#macro common_page_head>
     <title>Tutor Time</title>
 </#macro>
 
-<#macro page_body>
+<#macro page_head>
+    <@common_page_head/>
+</#macro>
+
+<#macro common_page_body>
 
 </#macro>
 
-<#macro scripts>
+
+<#macro page_body>
+    <@common_page_body/>
+</#macro>
+
+<#macro common_scripts>
     <script src="/js/vendor/modernizr-3.7.1.min.js"></script>
     <script src="/js/jquery-3.2.1.min.js"></script>
     <script src="/js/main.js"></script>
@@ -28,15 +37,23 @@
     <script src="/js/theme.js"></script>
 </#macro>
 
+<#macro scripts>
+    <@common_scripts/>
+</#macro>
+
 <#macro signin>
     <section class="top-btn-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <a href="#" class="main_btn" onclick="document.getElementById('id01').style.display='block'">
-                        Sign In/Sign Up
-                        <img src="img/next.png" alt="">
-                    </a>
+                    <#if account??>
+                        <p>You are signed in as <span class="user-highlight">${ account.username }</span></p>
+                    <#else>
+                        <a href="#" class="main_btn" onclick="document.getElementById('id01').style.display='block'">
+                            Sign In
+                            <img src="/img/next.png" alt="">
+                        </a>
+                    </#if>
 
                     <div id="id01" class="modal-big">
 

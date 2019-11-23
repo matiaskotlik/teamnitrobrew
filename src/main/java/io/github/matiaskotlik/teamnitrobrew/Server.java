@@ -222,22 +222,22 @@ public class Server {
 			String subject = req.queryParams("subject");
 			String id = "";
 			switch (am) {
-				case "tutor":
-					looking = "tutee";
-					break;
 				case "tutee":
 					looking = "tutor";
+					break;
+				case "tutor":
+					looking = "tutee";
 					Account account = req.session().attribute("account");
 					if (account != null) {
 						id = "&id=" + account.getId();
+						break;
 					}
-					break;
 				default:
 					res.status(404);
 					return render(getBase(req), "404.ftlh");
 			}
 			String room = getRoom(subject, am, looking);
-			res.redirect("/videocall?room=" + room + "&role=" + am);
+			res.redirect("/videocall?room=" + room + "&role=" + am + id);
 			System.out.println(am + ", " + looking);
 			return "asdf";
 		});

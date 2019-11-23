@@ -12,6 +12,24 @@
     <div id="cover">
         <p>Waiting on a tutor/tutee...</p>
     </div>
+    <div id="rating-modal" class="modal">
+        <form action="/rate" method="post">
+            <div class="rate">
+                <input type="radio" id="star5" name="rate" value="5"/>
+                <label for="star5" title="text">5 stars</label>
+                <input type="radio" id="star4" name="rate" value="4"/>
+                <label for="star4" title="text">4 stars</label>
+                <input type="radio" id="star3" name="rate" value="3"/>
+                <label for="star3" title="text">3 stars</label>
+                <input type="radio" id="star2" name="rate" value="2"/>
+                <label for="star2" title="text">2 stars</label>
+                <input type="radio" id="star1" name="rate" value="1"/>
+                <label for="star1" title="text">1 star</label>
+            </div>
+            <input id="tutor-id" type="hidden" value="">
+            <input type="submit" value="Submit rating">
+        </form>
+    </div>
 </#macro>
 
 <#macro content>
@@ -19,30 +37,28 @@
 </#macro>
 
 <#macro scripts>
-    {{ parent() }}
+    <@common_scripts/>
     <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <script>
-        Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
-            get: function(){
-                return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
-            }
-        })
-
         function go() {
             document.getElementById("cover").remove();
-
         }
 
-        function tryPlay() {
-            let self = document.getElementById("selfview");
-            let remote = document.getElementById("remoteview");
-            self.play();
-            remote.play();
-            if (!self.playing || !remote.playing) {
-                setTimeout(tryPlay, 200);
+        function tryPlay(e) {
+            if (!e.playing) {
+                e.play();
             }
+            setTimeout(() => {
+                tryPlay(e)
+            }, 200)
         }
-        tryPlay();
+
+        function tryPlayAll() {
+            tryPlay(document.getElementById("selfview"));
+            tryPlay(document.getElementById("remoteview"));
+        }
+
+        tryPlayAll();
 
         function getUrlParameter(name) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -56,63 +72,31 @@
             encrypted: true,
             authEndpoint: "/pusher/auth"
         });
-        var id, sessionDesc, room, caller, localUserMedia;
+        let role = getUrlParameter("role");
+        let id, tutorId, sessionDesc, room, caller, localUserMedia;
         const channel = pusher.subscribe(getUrlParameter("room"));
 
+        let remoteVideo = document.getElementById("remoteview");
+        let selfVideo = document.getElementById("selfview");
+
         channel.bind('pusher:subscription_succeeded', (members) => {
+            console.log("subsuc: " + members.count);
             id = channel.members.me.id;
-            console.log("SUCCESS: " + members.count);
+            startWebRTC(members.count === 2);
         });
 
         channel.bind('pusher:member_added', (member) => {
             console.log("ADDED: " + member.id);
-            setTimeout(() => {
-                callUser(member.id);
-                go();
-            }, 200);
         });
 
         channel.bind('pusher:member_removed', (member) => {
-            console.log("removed");
-            // // for remove member from list:
-            // var index = users.indexOf(member.id);
-            // users.splice(index, 1);
-            // endCall();
-            // render();
+            endCurrentCall();
         });
 
-        function render() {
-            var list = '';
-            users.forEach(function(user) {
-                list += `<li>` + user + ` <input type="button" style="float:right;"  value="Call" onclick="callUser('` + user + `')" id="makeCall" /></li>`
-            })
-            document.getElementById('users').innerHTML = list;
+        function endCurrentCall() {
+            console.log("ending call");
         }
 
-        //To iron over browser implementation anomalies like prefixes
-        GetRTCPeerConnection();
-        GetRTCSessionDescription();
-        GetRTCIceCandidate();
-        prepareCaller();
-        function prepareCaller(){
-            //Initializing a peer connection
-            caller = new window.RTCPeerConnection();
-            //Listen for ICE Candidates and send them to remote peers
-            caller.onicecandidate = function(evt) {
-                if (!evt.candidate) return;
-                console.log("onicecandidate called");
-                onIceCandidate(caller, evt);
-            };
-            //onaddstream handler to receive remote feed and show in remoteview video element
-            caller.onaddstream = function(evt) {
-                console.log("onaddstream called");
-                if (window.URL) {
-                    document.getElementById("remoteview").srcObject = evt.stream;
-                } else {
-                    document.getElementById("remoteview").src = evt.stream;
-                }
-            };
-        }
         function getCam() {
             //Get local audio/video feed and show it in selfview video element
             return navigator.mediaDevices.getUserMedia({
@@ -120,148 +104,84 @@
                 audio: true
             });
         }
-
         function GetRTCIceCandidate() {
             window.RTCIceCandidate = window.RTCIceCandidate || window.webkitRTCIceCandidate ||
                 window.mozRTCIceCandidate || window.msRTCIceCandidate;
-
             return window.RTCIceCandidate;
         }
-
         function GetRTCPeerConnection() {
             window.RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection ||
                 window.mozRTCPeerConnection || window.msRTCPeerConnection;
             return window.RTCPeerConnection;
         }
-
         function GetRTCSessionDescription() {
             window.RTCSessionDescription = window.RTCSessionDescription || window.webkitRTCSessionDescription ||
                 window.mozRTCSessionDescription || window.msRTCSessionDescription;
             return window.RTCSessionDescription;
         }
 
-        //Create and send offer to remote peer on button click
-        function callUser(user) {
 
-            getCam()
-                .then(stream => {
-                    if (window.URL) {
-                        document.getElementById("selfview").srcObject = stream;
-                    } else {
-                        document.getElementById("selfview").src = stream;
-                    }
-                    caller.addStream(stream);
-                    localUserMedia = stream;
-                    caller.createOffer().then(function(desc) {
-                        caller.setLocalDescription(new RTCSessionDescription(desc));
-                        channel.trigger("client-sdp", {
-                            "sdp": desc,
-                            "room": user,
-                            "from": id
-                        });
-                        room = user;
-                    });
+        let pc;
 
-                })
-                .catch(error => {
-                    console.log('an error occured', error);
-                })
-        };
+        function startWebRTC(isOfferer) {
+            pc = new RTCPeerConnection();
 
-        function endCall(){
-            room = undefined;
-            caller.close();
-            for (let track of localUserMedia.getTracks()) { track.stop() }
-            prepareCaller();
-        }
+            // 'onicecandidate' notifies us whenever an ICE agent needs to deliver a
+            // message to the other peer through the signaling server
+            pc.onicecandidate = event => {
+                if (event.candidate) {
+                    channel.trigger('client-onicecandidate', {'candidate': event.candidate});
+                }
+            };
 
-        function endCurrentCall(){
+            // If user is offerer let the 'negotiationneeded' event create the offer
+            if (isOfferer) {
+                pc.onnegotiationneeded = () => {
+                    pc.createOffer().then(localDescCreated).catch(e => console.error(e));
+                }
+            }
 
-            channel.trigger("client-endcall", {
-                "room": room
+            // When a remote stream arrives display it in the #remoteVideo element
+            pc.ontrack = event => {
+                const stream = event.streams[0];
+                if (!remoteVideo.srcObject || remoteVideo.srcObject.id !== stream.id) {
+                    remoteVideo.srcObject = stream;
+                }
+            };
+
+            navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: true,
+            }).then(stream => {
+                // Display your local video in #localVideo element
+                selfVideo.srcObject = stream;
+                go();
+                // Add your stream to be sent to the conneting peer
+                stream.getTracks().forEach(track => pc.addTrack(track, stream));
+            }, e => { console.error(e) });
+
+            channel.bind('client-onicecandidate', (data) => {
+                console.log("onice");
+                pc.addIceCandidate(
+                    new RTCIceCandidate(data.candidate)
+                );
             });
 
-            endCall();
-        }
-
-        //Send the ICE Candidate to the remote peer
-        function onIceCandidate(peer, evt) {
-            if (evt.candidate) {
-                channel.trigger("client-candidate", {
-                    "candidate": evt.candidate,
-                    "room": room
+            channel.bind('client-onsdp', (data) => {
+                console.log("onsdp");
+                pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(() => {
+                    // When receiving an offer lets answer it
+                    if (pc.remoteDescription.type === 'offer') {
+                        pc.createAnswer().then(localDescCreated).catch(e => console.error(e));
+                    }
                 });
+            });
+
+            function localDescCreated(desc) {
+                pc.setLocalDescription(desc).then(() => channel.trigger('client-onsdp', {'sdp': pc.localDescription}))
+                    .catch(e => console.error(e));
             }
         }
-
-        //Listening for the candidate message from a peer sent from onicecandidate handler
-        channel.bind("client-candidate", function(msg) {
-            if(msg.room==room){
-                console.log("candidate received");
-                caller.addIceCandidate(new RTCIceCandidate(msg.candidate));
-            }
-        });
-
-        //Listening for Session Description Protocol message with session details from remote peer
-        channel.bind("client-sdp", function(msg) {
-            if(msg.room == id){
-                console.log("sdp received");
-                go();
-                room = msg.room;
-                var sessionDesc = new RTCSessionDescription(msg.sdp);
-                caller.setRemoteDescription(sessionDesc).then(function() {
-                    caller.createAnswer().then(function(sdp) {
-                        caller.setLocalDescription(new RTCSessionDescription(sdp));
-                        channel.trigger("client-answer", {
-                            "sdp": sdp,
-                            "room": room
-                        });
-                    });
-                });
-                getCam()
-                    .then(stream => {
-                        localUserMedia = stream;
-                        if (window.URL) {
-                            document.getElementById("selfview").srcObject = stream;
-                        } else {
-                            document.getElementById("selfview").src = stream;
-                        }
-                        caller.addStream(stream);
-                    })
-                    .catch(error => {
-                        console.log('an error occured', error);
-                    })
-            }
-
-
-        });
-
-        //Listening for answer to offer sent to remote peer
-        channel.bind("client-answer", function(answer) {
-            if(answer.room==room){
-                console.log("answer received");
-                caller.setRemoteDescription(new RTCSessionDescription(answer.sdp));
-            }
-
-        });
-
-        channel.bind("client-reject", function(answer) {
-            if(answer.room==room){
-                console.log("Call declined");
-                alert("call to " + answer.rejected + "was politely declined");
-                endCall();
-            }
-
-        });
-
-        channel.bind("client-endcall", function(answer) {
-            if(answer.room==room){
-                console.log("Call Ended");
-                endCall();
-
-            }
-
-        });
     </script>
 </#macro>
 
