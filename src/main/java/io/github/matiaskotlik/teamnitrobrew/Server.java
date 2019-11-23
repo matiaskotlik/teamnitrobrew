@@ -1,7 +1,9 @@
 package io.github.matiaskotlik.teamnitrobrew;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pusher.rest.Pusher;
 import com.pusher.rest.data.PresenceUser;
+import com.pusher.rest.data.Result;
 import freemarker.template.Configuration;
 import freemarker.template.Version;
 import io.github.matiaskotlik.teamnitrobrew.account.Account;
@@ -15,9 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +25,7 @@ import java.util.UUID;
 import static spark.Spark.*;
 
 public class Server {
+	public static ObjectMapper mapper = new ObjectMapper();
 	public static void main(String[] args) {
 		int port = 8080; // default port
 		boolean debug = true; // debug mode
@@ -47,7 +47,6 @@ public class Server {
 	private FreeMarkerEngine engine;
 	private AccountDatabase accountDatabase;
 	private PasswordHasher passwordHasher;
-	private Map<String, String> rooms;
 
 	public Server(int port, boolean debug) {
 		this.port = port;
@@ -154,20 +153,56 @@ public class Server {
 		return attributes;
 	}
 
+	private String getRoom(String subject, String am, String looking) {
+		Result result = pusher.get("/channels",
+				new HashMap<String, String>() {{
+						put("filter_by_prefix", "presence-" + subject + "-" + looking);
+						put("info", "user_count");
+					}});
+		if (result.getStatus() == Result.Status.SUCCESS) {
+			String channelListJson = result.getMessage();
+			PusherResponse ps;
+			try {
+				ps = mapper.readValue(channelListJson, PusherResponse.class);
+			} catch (IOException e) {
+				System.out.println("fuckkkk");
+				e.printStackTrace();
+				System.out.println(channelListJson);
+				return "presence-error";
+			}
+			for (Map.Entry<String, Channel> e : ps.getChannels().entrySet()) {
+				if (e.getValue().getUserCount() == 1) {
+					return e.getKey();
+				}
+			}
+			return "presence-" + subject + "-" + am + UUID.randomUUID().toString();
+		}
+		return "presence-error";
+	}
+
 	private void makePaths() {
 		get("/", (req, res) -> {
 			return render(getBase(req), "index.ftlh");
 		});
 
 		post("/search", (req, res) -> {
-			switch (req.queryParams("type")) {
-				"tutor":
-
-				"tutee":
-
+			String am = req.queryParams("type");
+			String looking;
+			String subject = req.queryParams("subject");
+			switch (am) {
+				case "tutor":
+					looking = "tutee";
+					break;
+				case "tutee":
+					looking = "tutor";
+					break;
 				default:
-					return res.status(404);
+					res.status(404);
+					return "";
 			}
+			String room = getRoom(subject, am, looking);
+			res.redirect("/videocall?room=" + room);
+			return "";
 		});
 
 		get("/videocall", (req, res) -> {
@@ -181,6 +216,10 @@ public class Server {
 		internalServerError((req, res) -> {
 			return render(getBase(req), "500.ftlh");
 		});
+	}
+
+	public String genRoom() {
+		return UUID.randomUUID().toString();
 	}
 
 	public String render(Map<String, Object> attributes, String templatePath) {
