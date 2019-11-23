@@ -19,7 +19,7 @@
                     <p class="pt-20" style="font-size:80%">
                         As for our tutors, any highschooler/adult who is experienced in a certain subject can sign up
                         as a tutor! Sessions last from 5 minutes to 1 hour, the fee per session starting at $2.
-                        Your profile will show how many questions you were asked and how many you answered.
+                        Your profile will show how much money you have earned from answering questions.
                     </p>
                     <div class="page-link-wrap">
                         <div class="page_link">
