@@ -101,31 +101,6 @@ public class Server {
 		accountDatabase = new AccountDatabase();
 		accountDatabase.load();
 
-		accountDatabase.getList().add(new Account(UUID.randomUUID().toString(),
-				"rachel",
-				new PasswordHasher().getHashedPassword("password"),
-				"Rachel Yao",
-				"I am a student at Naperville North High School. I enjoy art and computer science. I created Tutor Time with my teammates in order to provide a platform for high school students to get easy and instant access to tutoring without having to schedule ahead of the time.",
-				"rachel.jpeg",
-				Arrays.asList(4, 5, 5),
-				Arrays.asList(
-						new Blog("Mrs. Moore's 1st Period Class",
-								"AP Calculus BC",
-								"This course includes all topics covered in AP Calculus AB. Additional topics include sequences and series, polar coordinates, vector functions, additional integration methods, and differential equations. Students desiring two semesters of college placement/credit will be encouraged to take the Advanced Placement Exam. A graphing calculator is required.",
-								"calc.jpg"),
-						new Blog("Mr. Rowzee's 3rd Period Class",
-								"AP Physics 1",
-								"Physics 1 is an inquiry-based course designed to expand on the principles of how and why the world around us works and find practical applications of physics through labs, data analysis, problem solving, and discussions. Students will investigate the topics of motion, force, energy, momentum, waves, rotational motion, electrostatics, and electricity. Students taking this course should be self-directed learners with strong mathcomputational skills..",
-								"physics.jpg"),
-						new Blog("Ms. Parato's 8th Period Class",
-								"AP Language and Composition",
-								"Per the College Board description of the English Language and Composition course (2006), AP® Language and Composition is a college-level course designed to prepare students to “become skilled writers who compose for a variety of purposes, aware of the interactions among a writer’s purposes, audience expectations, and subjects. An integral part of [this] course [is] the development of research skills that enable [you] to evaluate, use, and cite source material.",
-								"lang.png")
-				),
-				13.64
-		));
-		accountDatabase.save();
-
 		makePaths();
 		makePusherPaths();
 	}
