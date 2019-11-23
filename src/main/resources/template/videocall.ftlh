@@ -17,7 +17,7 @@
         </div>
     </div>
     <div id="cover">
-        <button id="startCall" onclick="go()">Start Call</button>
+        <p>Waiting on a tutor/tutee...</p>
     </div>
 </#macro>
 
@@ -29,43 +29,44 @@
             document.getElementById("remoteview").play();
         }
 
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        };
+
         var pusher = new Pusher("d964cc6cb9f216c957f8", {
             cluster: "us2",
             encrypted: true,
             authEndpoint: "/pusher/auth"
         });
-        var usersOnline, id, users = [],
-            sessionDesc,
-            currentcaller, room, caller, localUserMedia;
-        const channel = pusher.subscribe('presence-videocall');
+        var usersOnline, id, users = [], sessionDesc, currentcaller, room, caller, localUserMedia;
+        const channel = pusher.subscribe('presence-videocall-' + getUrlParameter("room"));
 
         channel.bind('pusher:subscription_succeeded', (members) => {
-            //set the member count
-            usersOnline = members.count;
-            id = channel.members.me.id;
-            document.getElementById('myid').innerHTML = ` My caller id is : ` + id;
             members.each((member) => {
                 if (member.id != channel.members.me.id) {
-                    users.push(member.id)
+                    callUser(member.id);
+                    go();
+                    return;
                 }
             });
-
-            render();
-        })
+        });
 
         channel.bind('pusher:member_added', (member) => {
-            users.push(member.id)
-            render();
+            // users.push(member.id)
+            // render();
         });
 
         channel.bind('pusher:member_removed', (member) => {
-            // for remove member from list:
-            var index = users.indexOf(member.id);
-            users.splice(index, 1);
+            // // for remove member from list:
+            // var index = users.indexOf(member.id);
+            // users.splice(index, 1);
             if(member.id==room){
                 endCall();
             }
-            render();
+            // render();
         });
 
         function render() {
