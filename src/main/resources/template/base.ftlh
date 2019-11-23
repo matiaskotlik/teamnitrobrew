@@ -20,6 +20,7 @@
         <link rel="apple-touch-icon" href="icon.png">
 
         <link href="css/material-icons.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
 
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
@@ -46,7 +47,11 @@
     <!-- JS -->
     <script src="js/vendor/modernizr-3.7.1.min.js"></script>
     <script src="js/vendor/jquery-3.3.1.min.js"></script>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+
+    <@scripts/>
 
     <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
     <!--  <script>-->

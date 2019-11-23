@@ -1,5 +1,7 @@
 package io.github.matiaskotlik.teamnitrobrew;
 
+import com.pusher.rest.Pusher;
+import com.pusher.rest.data.PresenceUser;
 import freemarker.template.Configuration;
 import freemarker.template.Version;
 import io.github.matiaskotlik.teamnitrobrew.account.Account;
@@ -11,9 +13,15 @@ import spark.template.freemarker.FreeMarkerEngine;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static spark.Spark.*;
 
@@ -35,9 +43,11 @@ public class Server {
 
 	private int port;
 	private boolean debug;
+	private Pusher pusher;
 	private FreeMarkerEngine engine;
 	private AccountDatabase accountDatabase;
 	private PasswordHasher passwordHasher;
+	private Map<String, String> rooms;
 
 	public Server(int port, boolean debug) {
 		this.port = port;
@@ -47,6 +57,7 @@ public class Server {
 	public void start() {
 		port(port);
 
+		// static files
 		String projectDir = System.getProperty("user.dir");
 		if (debug) {
 			String staticDir = "src/main/resources/public";
@@ -54,6 +65,19 @@ public class Server {
 		} else {
 			staticFiles.location("/public");
 		}
+
+		// connect to pusher
+		String secret = null;
+		try {
+			secret = new String(Files.readAllBytes(Paths.get(projectDir, "secret.txt"))).trim();
+		} catch (IOException e) {
+			System.err.println("No secret file found, please add `secret.txt` to the root directory with the secret in it");
+			return;
+		}
+
+		pusher = new Pusher("905167", "d964cc6cb9f216c957f8", secret);
+		pusher.setCluster("us2");
+		pusher.setEncrypted(true);
 
 		Configuration configuration = new Configuration(new Version(2, 3, 23));
 		boolean fail = false;
@@ -76,9 +100,22 @@ public class Server {
 		accountDatabase.load();
 
 		makePaths();
+		makePusherPaths();
 		if (debug) {
 			makeDebugPaths();
 		}
+	}
+
+	private void makePusherPaths() {
+		path("/pusher", () -> {
+			post("/auth", (req, res) -> {
+				String socket_id = req.queryParams("socket_id");
+				String channel_name = req.queryParams("channel_name");
+				String id = UUID.randomUUID().toString() + new Date().toString();
+				PresenceUser presenceUser = new PresenceUser(id.hashCode());
+				return pusher.authenticate(socket_id, channel_name, presenceUser);
+			});
+		});
 	}
 
 	private void makeDebugPaths() {
@@ -120,6 +157,21 @@ public class Server {
 	private void makePaths() {
 		get("/", (req, res) -> {
 			return render(getBase(req), "index.ftlh");
+		});
+
+		post("/search", (req, res) -> {
+			switch (req.queryParams("type")) {
+				"tutor":
+
+				"tutee":
+
+				default:
+					return res.status(404);
+			}
+		});
+
+		get("/videocall", (req, res) -> {
+			return render(getBase(req), "videocall.ftlh");
 		});
 
 		notFound((req, res) -> {

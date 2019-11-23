@@ -23,6 +23,8 @@ dependencies {
     compile 'com.sparkjava:spark-template-freemarker:2.7.1' // spark freemarker template support
     compile 'org.slf4j:slf4j-simple:1.7.21' // spark logging
 
+    compile 'com.pusher:pusher-http-java:1.0.0' // pusher
+
     compile 'com.fasterxml.jackson.core:jackson-core:2.4.1' // jackson core
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.1' // jackson annotations
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.1' // jackson databind
