@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.matiaskotlik.teamnitrobrew.Blog;
 import io.github.matiaskotlik.teamnitrobrew.crypt.HashedPassword;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Account {
@@ -16,22 +18,32 @@ public class Account {
 	private String username;
 	private HashedPassword hashedPassword;
 
-	private ArrayList<Integer> ratings;
-	private double funds = 0;
-
-	public Account(String username, HashedPassword hashedPassword) {
-		this(UUID.randomUUID().toString(), username, hashedPassword, -1, 0);
-	}
+	private String fullname;
+	private String desc;
+	private String img;
+	private List<Integer> ratings;
+	private List<Blog> blogs;
+	private double funds;
 
 	@JsonCreator
 	public Account(@JsonProperty("id") String id,
 	               @JsonProperty("username") String username,
 	               @JsonProperty("hashedPassword") HashedPassword hashedPassword,
-	               @JsonProperty("avgRating") double avgRating,
+	               @JsonProperty("fullname") String fullname,
+	               @JsonProperty("desc") String desc,
+	               @JsonProperty("img") String img,
+	               @JsonProperty("ratings") List<Integer> ratings,
+	               @JsonProperty("blogs") List<Blog> blogs,
 	               @JsonProperty("funds") double funds) {
 		this.id = id;
 		this.username = username;
 		this.hashedPassword = hashedPassword;
+		this.fullname = fullname;
+		this.desc = desc;
+		this.img = img;
+		this.ratings = ratings;
+		this.blogs = blogs;
+		this.funds = funds;
 	}
 
 	public String getId() {
@@ -58,7 +70,7 @@ public class Account {
 		this.hashedPassword = hashedPassword;
 	}
 
-	public double getAvgRating() {
+	public double showAvgRating() {
 		return ratings.stream().reduce(Integer::sum).orElse(0) / ((double) ratings.size());
 	}
 
@@ -70,12 +82,36 @@ public class Account {
 		this.funds = funds;
 	}
 
-	public ArrayList<Integer> getRatings() {
+	public List<Integer> getRatings() {
 		return ratings;
 	}
 
-	public void setRatings(ArrayList<Integer> ratings) {
+	public void setRatings(List<Integer> ratings) {
 		this.ratings = ratings;
+	}
+
+	public String getFullname() {
+		return fullname;
+	}
+
+	public void setFullname(String fullname) {
+		this.fullname = fullname;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	public List<Blog> getBlogs() {
+		return blogs;
+	}
+
+	public void setBlogs(List<Blog> blogs) {
+		this.blogs = blogs;
 	}
 
 	public void updateFunds(double amt) {
