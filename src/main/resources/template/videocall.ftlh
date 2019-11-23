@@ -8,7 +8,6 @@
     <div id="app">
         <video id="selfview"></video>
         <video id="remoteview"></video>
-        <button id="endCall" style="display: none;" onclick="endCurrentCall()">End Call </button>
     </div>
     <div id="cover">
         <p>Waiting on a tutor/tutee...</p>
@@ -17,11 +16,27 @@
 
 <#macro scripts>
     <script>
+        Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
+            get: function(){
+                return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+            }
+        })
+
         function go() {
             document.getElementById("cover").remove();
-            document.getElementById("selfview").play();
-            document.getElementById("remoteview").play();
+
         }
+
+        function tryPlay() {
+            let self = document.getElementById("selfview");
+            let remote = document.getElementById("remoteview");
+            self.play();
+            remote.play();
+            if (!self.playing || !remote.playing) {
+                setTimeout(tryPlay, 200);
+            }
+        }
+        tryPlay();
 
         function getUrlParameter(name) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -39,20 +54,23 @@
         const channel = pusher.subscribe(getUrlParameter("room"));
 
         channel.bind('pusher:subscription_succeeded', (members) => {
+            usersOnline = members.count;
+            id = channel.members.me.id;
+            console.log("SUCCESS: " + members.count);
         });
 
         channel.bind('pusher:member_added', (member) => {
-            setTimeout(() => {
-                callUser(member.id);
-                go();
-            }, 200);
+            console.log("ADDED: " + member.id);
+            callUser(member.id);
+            go();
         });
 
         channel.bind('pusher:member_removed', (member) => {
+            console.log("removed");
             // // for remove member from list:
             // var index = users.indexOf(member.id);
             // users.splice(index, 1);
-            endCall();
+            // endCall();
             // render();
         });
 
@@ -125,7 +143,6 @@
                     } else {
                         document.getElementById("selfview").src = stream;
                     }
-                    toggleEndCallButton();
                     caller.addStream(stream);
                     localUserMedia = stream;
                     caller.createOffer().then(function(desc) {
@@ -149,8 +166,6 @@
             caller.close();
             for (let track of localUserMedia.getTracks()) { track.stop() }
             prepareCaller();
-            toggleEndCallButton();
-
         }
 
         function endCurrentCall(){
@@ -171,16 +186,6 @@
                 });
             }
         }
-
-        function toggleEndCallButton(){
-            if (document.getElementById("endCall").style.display == 'block') {
-                document.getElementById("endCall").style.display = 'none';
-            } else {
-                document.getElementById("endCall").style.display = 'block';
-            }
-        }
-
-
 
         //Listening for the candidate message from a peer sent from onicecandidate handler
         channel.bind("client-candidate", function(msg) {
@@ -209,7 +214,6 @@
                 getCam()
                     .then(stream => {
                         localUserMedia = stream;
-                        toggleEndCallButton();
                         if (window.URL) {
                             document.getElementById("selfview").srcObject = stream;
                         } else {
