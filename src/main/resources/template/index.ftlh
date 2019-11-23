@@ -82,13 +82,14 @@
                 onIceCandidate(caller, evt);
             };
             //onaddstream handler to receive remote feed and show in remoteview video element
-            caller.ontrack = function(evt) {
-                console.log("ontrack called");
+            caller.onaddstream = function(evt) {
+                console.log("onaddstream called");
                 if (window.URL) {
                     document.getElementById("remoteview").srcObject = evt.stream;
                 } else {
                     document.getElementById("remoteview").src = evt.stream;
                 }
+                document.getElementById("remoteview").play();
             };
         }
         function getCam() {
@@ -120,6 +121,7 @@
 
         //Create and send offer to remote peer on button click
         function callUser(user) {
+
             getCam()
                 .then(stream => {
                     if (window.URL) {
@@ -127,6 +129,7 @@
                     } else {
                         document.getElementById("selfview").src = stream;
                     }
+                    document.getElementById("selfview").play();
                     toggleEndCallButton();
                     caller.addStream(stream);
                     localUserMedia = stream;
@@ -221,6 +224,7 @@
                         } else {
                             document.getElementById("selfview").src = stream;
                         }
+                        document.getElementById("selfview").play();
                         caller.addStream(stream);
                     })
                     .catch(error => {
