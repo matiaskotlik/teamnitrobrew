@@ -16,10 +16,19 @@
             </ul>
         </div>
     </div>
+    <div id="cover">
+        <button id="startCall" onclick="go()">Start Call</button>
+    </div>
 </#macro>
 
 <#macro scripts>
     <script>
+        function go() {
+            document.getElementById("cover").remove();
+            document.getElementById("selfview").play();
+            document.getElementById("remoteview").play();
+        }
+
         var pusher = new Pusher("d964cc6cb9f216c957f8", {
             cluster: "us2",
             encrypted: true,
@@ -89,7 +98,6 @@
                 } else {
                     document.getElementById("remoteview").src = evt.stream;
                 }
-                document.getElementById("remoteview").play();
             };
         }
         function getCam() {
@@ -129,7 +137,6 @@
                     } else {
                         document.getElementById("selfview").src = stream;
                     }
-                    document.getElementById("selfview").play();
                     toggleEndCallButton();
                     caller.addStream(stream);
                     localUserMedia = stream;
@@ -198,12 +205,7 @@
         //Listening for Session Description Protocol message with session details from remote peer
         channel.bind("client-sdp", function(msg) {
             if(msg.room == id){
-
                 console.log("sdp received");
-                var answer = confirm("You have a call from: "+ msg.from + "Would you like to answer?");
-                if(!answer){
-                    return channel.trigger("client-reject", {"room": msg.room, "rejected":id});
-                }
                 room = msg.room;
                 var sessionDesc = new RTCSessionDescription(msg.sdp);
                 caller.setRemoteDescription(sessionDesc).then(function() {
@@ -224,7 +226,6 @@
                         } else {
                             document.getElementById("selfview").src = stream;
                         }
-                        document.getElementById("selfview").play();
                         caller.addStream(stream);
                     })
                     .catch(error => {
