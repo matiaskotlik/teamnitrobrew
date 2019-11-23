@@ -47,6 +47,7 @@ public class Server {
 	private FreeMarkerEngine engine;
 	private AccountDatabase accountDatabase;
 	private PasswordHasher passwordHasher;
+	private Map<String, String> rooms;
 
 	public Server(int port, boolean debug) {
 		this.port = port;
@@ -156,6 +157,21 @@ public class Server {
 	private void makePaths() {
 		get("/", (req, res) -> {
 			return render(getBase(req), "index.ftlh");
+		});
+
+		post("/search", (req, res) -> {
+			switch (req.queryParams("type")) {
+				"tutor":
+
+				"tutee":
+
+				default:
+					return res.status(404);
+			}
+		});
+
+		get("/videocall", (req, res) -> {
+			return render(getBase(req), "videocall.ftlh");
 		});
 
 		notFound((req, res) -> {
