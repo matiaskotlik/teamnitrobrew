@@ -12,7 +12,6 @@
                    ${ user.desc }
                 </p>
                 <div>
-                    <p class="pt-20">Average rating: ${ user.averageRating }</p>
                     <#if account?? && account.id == user.id>
                         <p class="pt-20">Cash Earned: ${ user.funds?string.currency }</p>
                     </#if>

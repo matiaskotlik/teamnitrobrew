@@ -6,11 +6,10 @@
         <div class="container-fluid">
             <div class="row d-flex align-items-center justify-content-center">
                 <div class="header-right col-lg-6 col-md-6">
-                    <h1 style="color:green">
+                    <h1 style="color:rgb(144,175,119)">
                         Tutor Time <br>
                     </h1>
-                    <font color=”rgb(164,199,149)”>
-                        <p class="pt-20">
+                        <p style="color:rgb(144,175,119)" class="pt-20">
                             Struggling in school? Get convenient, instant access to our active online tutors!
                             Or, sign up to become a tutor today!
                         </p>
@@ -35,9 +34,8 @@
                         </a>
                         <div class="watch">
 
-                            <h5 style="color:green;">Welcome to Tutor Time!</h5>
-                            <font color=”rgb(164,199,149)”>
-                                <p>An introduction to our website</p>
+                            <h5 style="color:rgb(144,175,119)" ">Welcome to Tutor Time!</h5>
+                                <p style="color:rgb(144,175,119)"">An introduction to our website</p>
                             </font>
                         </div>
                     </div>
