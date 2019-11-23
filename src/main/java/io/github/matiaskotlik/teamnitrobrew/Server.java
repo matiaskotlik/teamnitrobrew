@@ -1,5 +1,6 @@
 package io.github.matiaskotlik.teamnitrobrew;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pusher.rest.Pusher;
 import com.pusher.rest.data.PresenceUser;
 import com.pusher.rest.data.Result;
@@ -16,17 +17,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static spark.Spark.*;
 
 public class Server {
+	public static ObjectMapper mapper = new ObjectMapper();
 	public static void main(String[] args) {
 		int port = 8080; // default port
 		boolean debug = true; // debug mode
@@ -48,8 +47,6 @@ public class Server {
 	private FreeMarkerEngine engine;
 	private AccountDatabase accountDatabase;
 	private PasswordHasher passwordHasher;
-	private Map<String, String> tutorRooms;
-	private Map<String, String> tuteeRooms;
 
 	public Server(int port, boolean debug) {
 		this.port = port;
@@ -58,9 +55,6 @@ public class Server {
 
 	public void start() {
 		port(port);
-
-		tutorRooms = new ConcurrentHashMap<>();
-		tuteeRooms = new ConcurrentHashMap<>();
 
 		// static files
 		String projectDir = System.getProperty("user.dir");
@@ -159,15 +153,31 @@ public class Server {
 		return attributes;
 	}
 
-	private boolean isAvailibleRoom(String room) {
-		Result result = pusher.get("/channels/presence-videocall-" + room, Collections.singletonMap("info", "user_count"));
+	private String getRoom(String subject, String am, String looking) {
+		Result result = pusher.get("/channels",
+				new HashMap<String, String>() {{
+						put("filter_by_prefix", "presence-" + subject + "-" + looking);
+						put("info", "user_count");
+					}});
 		if (result.getStatus() == Result.Status.SUCCESS) {
 			String channelListJson = result.getMessage();
-			int users = Integer.parseInt(Arrays.stream(channelListJson.split(":")).reduce((first, second) -> second)
-					.orElse("0").replace("}", ""));
-			return users == 1;
+			PusherResponse ps;
+			try {
+				ps = mapper.readValue(channelListJson, PusherResponse.class);
+			} catch (IOException e) {
+				System.out.println("fuckkkk");
+				e.printStackTrace();
+				System.out.println(channelListJson);
+				return "presence-error";
+			}
+			for (Map.Entry<String, Channel> e : ps.getChannels().entrySet()) {
+				if (e.getValue().getUserCount() == 1) {
+					return e.getKey();
+				}
+			}
+			return "presence-" + subject + "-" + am + UUID.randomUUID().toString();
 		}
-		return false;
+		return "presence-error";
 	}
 
 	private void makePaths() {
@@ -176,33 +186,21 @@ public class Server {
 		});
 
 		post("/search", (req, res) -> {
-			String room;
+			String am = req.queryParams("type");
+			String looking;
 			String subject = req.queryParams("subject");
-			switch (req.queryParams("type")) {
+			switch (am) {
 				case "tutor":
-					room = tuteeRooms.remove(subject);
-					if (room != null && !isAvailibleRoom(room)) {
-						room = null;
-					}
-					if (room == null) {
-						room = genRoom();
-						tutorRooms.put(subject, room);
-					}
+					looking = "tutee";
 					break;
 				case "tutee":
-					room = tutorRooms.remove(subject);
-					if (room != null && !isAvailibleRoom(room)) {
-						room = null;
-					}
-					if (room == null) {
-						room = genRoom();
-						tuteeRooms.put(subject, room);
-					}
+					looking = "tutor";
 					break;
 				default:
 					res.status(404);
 					return "";
 			}
+			String room = getRoom(subject, am, looking);
 			res.redirect("/videocall?room=" + room);
 			return "";
 		});

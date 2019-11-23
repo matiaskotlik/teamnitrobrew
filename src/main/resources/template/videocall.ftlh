@@ -36,7 +36,7 @@
             authEndpoint: "/pusher/auth"
         });
         var usersOnline, id, users = [], sessionDesc, currentcaller, room, caller, localUserMedia;
-        const channel = pusher.subscribe('presence-videocall-' + getUrlParameter("room"));
+        const channel = pusher.subscribe(getUrlParameter("room"));
 
         channel.bind('pusher:subscription_succeeded', (members) => {
         });
