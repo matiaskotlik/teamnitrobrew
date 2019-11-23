@@ -46,7 +46,10 @@
     <!-- JS -->
     <script src="js/vendor/modernizr-3.7.1.min.js"></script>
     <script src="js/vendor/jquery-3.3.1.min.js"></script>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <script src="js/main.js"></script>
+
+    <@scripts/>
 
     <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
     <!--  <script>-->
