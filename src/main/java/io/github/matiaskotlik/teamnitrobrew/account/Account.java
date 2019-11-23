@@ -1,6 +1,7 @@
 package io.github.matiaskotlik.teamnitrobrew.account;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,7 +71,7 @@ public class Account {
 		this.hashedPassword = hashedPassword;
 	}
 
-	public double showAvgRating() {
+	public double getAvgRating() {
 		return ratings.stream().reduce(Integer::sum).orElse(0) / ((double) ratings.size());
 	}
 

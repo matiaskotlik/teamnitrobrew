@@ -14,6 +14,10 @@
     </div>
 </#macro>
 
+<#macro content>
+    <@page_body/>
+</#macro>
+
 <#macro scripts>
     <script>
         Object.defineProperty(HTMLMediaElement.prototype, 'playing', {

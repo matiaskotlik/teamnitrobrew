@@ -1,7 +1,7 @@
 <#include 'base.ftlh'>
 
 <#macro page_body>
-<section class="home-banner-area common-banner relative">
+<section style="margin-bottom: 50px" class="home-banner-area common-banner relative">
     <div class="container-fluid">
         <div class="row d-flex align-items-center justify-content-center">
             <div class="header-right col-lg-6 col-md-6">
@@ -12,6 +12,7 @@
                    ${ user.desc }
                 </p>
                 <div>
+                    <p class="pt-20">Average rating: ${ user.avgRating?string["0.#"] }</p>
                     <#if account?? && account.id == user.id>
                         <p class="pt-20">Cash Earned: ${ user.funds?string.currency }</p>
                     </#if>
