@@ -6,6 +6,10 @@
     <p>Base Body</p>
 </#macro>
 
+<#macro scripts>
+
+</#macro>
+
 <#macro display_page>
     <!doctype html>
     <html class="no-js" lang="">
