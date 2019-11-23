@@ -50,19 +50,20 @@
             encrypted: true,
             authEndpoint: "/pusher/auth"
         });
-        var usersOnline, id, users = [], sessionDesc, currentcaller, room, caller, localUserMedia;
+        var id, sessionDesc, room, caller, localUserMedia;
         const channel = pusher.subscribe(getUrlParameter("room"));
 
         channel.bind('pusher:subscription_succeeded', (members) => {
-            usersOnline = members.count;
             id = channel.members.me.id;
             console.log("SUCCESS: " + members.count);
         });
 
         channel.bind('pusher:member_added', (member) => {
             console.log("ADDED: " + member.id);
-            callUser(member.id);
-            go();
+            setTimeout(() => {
+                callUser(member.id);
+                go();
+            }, 200);
         });
 
         channel.bind('pusher:member_removed', (member) => {
