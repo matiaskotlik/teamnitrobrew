@@ -1,108 +1,427 @@
+<!doctype html>
+<html lang="en">
 
-<#macro page_body>
-<section class="home-banner-area common-banner relative">
-	<div class="container-fluid">
-		<div class="row d-flex align-items-center justify-content-center">
-			<div class="header-right col-lg-6 col-md-6">
-				<h1>
-					Rachel Yao
-				</h1>
-				<p class="pt-20">
-					I am a student at Naperville North High School. I enjoy art and computer science. I created Tutor Time with my teammates in order to provide a platform for high school students to get easy and instant access to tutoring without having to schedule ahead of the time.
-				</p>
-				<p class ="pt-20">
-					Questions Asked: 26 --- Questions Answered: 34 </p>
-				<p>Cash Earned: $16.50
-				</p>
-				<div class="page-link-wrap">
-					<div class="page_link">
-						<a href="index.html">Learn</a>
-					</div>
-				</div>
-				<div class="page-link-wrap">
-					<div class="page_link">
-						<a href="index.html">Teach</a>
-					</div>
-				</div>
-			</div>
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" href="img/tt-icon.png" type="image/png">
+	<title>Tutor Time</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="vendors/linericon/style.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+	<link rel="stylesheet" href="vendors/nice-select/css/nice-select.css">
+	<link rel="stylesheet" href="vendors/animate-css/animate.css">
+	<link rel="stylesheet" href="vendors/jquery-ui/jquery-ui.css">
+	<link rel="stylesheet" href="vendors/popup/magnific-popup.css">
+	<link rel="stylesheet" href="vendors/swiper/css/swiper.min.css">
+	<link rel="stylesheet" href="vendors/scroll/jquery.mCustomScrollbar.css">
+	<!-- main css -->
+	<link rel="stylesheet" href="css/style.css">
+</head>
 
-			<div class="col-lg-6 col-md-6 header-left">
-				<div class="">
-					<img class="img-fluid w-50" src="img/rachel.jpeg" alt="">
-				</div>
+<body>
+
+	<!--================ Offcanvus Menu Area =================-->
+	<div class="side_menu">
+		<div class="logo">
+			<a href="index.html">
+				<img src="img/tt-icon.png" height = 200 alt="">
+			</a>
+		</div>
+		<ul class="list menu-left">
+			<li>
+				<a href="index.html">Home</a>
+			</li>
+			<li>
+				<a href="packages.html">My Profile</a>
+			</li>
+			<li>
+				<a href="about-us.html">About Us</a>
+			</li>
+			<li>
+				<a href="contact.html">Contact Us</a>
+			</li>
+		</ul>
+	</div>
+	<!--================ End Offcanvus Menu Area =================-->
+
+	<!--================ Canvus Menu Area =================-->
+	<div class="canvus_menu">
+		<div class="container">
+			<div class="toggle_icon" title="Menu Bar">
+				<span></span>
 			</div>
 		</div>
 	</div>
-</section>
-<!--================ End banner section =================-->
+	<!--================ End Canvus Menu Area =================-->
 
-<!--================ Start Amenities Area =================-->
-<section class="amenities-area section_gap_bottom">
-	<div class="container">
-		<div class="row align-items-end justify-content-left">
-			<div class="col-lg-5">
-				<div class="main_title">
-					<h1>Recently<br>Practicing</h1>
-					<p>The subjects that you've been working on the most this week.</p>
+	<section class="top-btn-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                        <style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Set a style for all buttons */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+  width: auto;
+  padding: 10px 18px;
+  background-color: #f44336;
+}
+
+/* Center the image and position the close button */
+.imgcontainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+  position: relative;
+}
+
+img.avatar {
+  width: 40%;
+  border-radius: 50%;
+}
+
+.container {
+  padding: 16px;
+}
+
+span.psw {
+  float: right;
+  padding-top: 16px;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  cursor: pointer;
+}
+
+/* Add Zoom Animation */
+.animate {
+  -webkit-animation: animatezoom 0.6s;
+  animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)}
+  to {-webkit-transform: scale(1)}
+}
+
+@keyframes animatezoom {
+  from {transform: scale(0)}
+  to {transform: scale(1)}
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+  span.psw {
+     display: block;
+     float: none;
+  }
+  .cancelbtn {
+     width: 100%;
+  }
+}
+</style>
+                    </head>
+                    <body>
+
+                    <a href="#" class="main_btn" onclick="document.getElementById('id01').style.display='block'">
+                        Sign In/Sign Up
+                        <img src="img/next.png" alt="">
+                    </a>
+
+                    <div id="id01" class="modal">
+
+                        <form class="modal-content animate" action="/action_page.php" method="post">
+                            <div class="imgcontainer">
+                                <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+                            </div>
+
+                            <div class="container">
+                                <label><b>Username</b></label>
+                                <input type="text" placeholder="Enter Username" name="uname" required style = "font-family:Times">
+
+                                <label><b>Password</b></label>
+                                <input type="password" placeholder="Enter Password" name="psw" required style = "font-family:Times">
+
+                                <button type="submit" onclick="document.getElementById('id01').style.display='block'" >Login</button>
+                                <label>
+                                    <input type="checkbox" checked="checked" name="remember"> Remember me
+                                </label>
+                            </div>
+
+                            <div class="container" style="background-color:#f1f1f1">
+                                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+                                <span class="psw">Forgot <a href="#">password?</a></span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <script>
+// Get the modal
+var modal = document.getElementById('id01');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
+
+                    </body>
+                    </html>
 				</div>
 			</div>
 		</div>
-		<div class="row justify-content-center">
-			<!-- single-blog -->
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="single-amenities">
-					<div class="amenities-thumb">
-						<img class="img-fluid" height = 100 src="img/calc.jpg" alt="">
-					</div>
-					<div class="amenities-details">
-						<div class="amenities-meta">
-							<span>Mrs. Moore's 1st Period Class</span>
+	</section>
+
+	<!--================ Start banner section =================-->
+	<section class="home-banner-area common-banner relative">
+		<div class="container-fluid">
+			<div class="row d-flex align-items-center justify-content-center">
+				<div class="header-right col-lg-6 col-md-6">
+					<h1>
+						Rachel Yao
+					</h1>
+					<p class="pt-20">
+						I am a student at Naperville North High School. I enjoy art and computer science. I created Tutor Time with my teammates in order to provide a platform for high school students to get easy and instant access to tutoring without having to schedule ahead of the time.
+					</p>
+					<p class ="pt-20">
+						Questions Asked: 26 --- Questions Answered: 34 </p>
+						<p>Cash Earned: $16.50
+					</p>
+					<div class="page-link-wrap">
+						<div class="page_link">
+							<a href="index.html">Learn</a>
 						</div>
-						<h5><a href="#">AP BC Calculus</a></h5>
-						<p>This course includes all topics covered in AP Calculus AB. Additional topics include sequences and series,
-							polar coordinates, vector functions, additional integration methods, and differential equations. Students
-							desiring two semesters of college placement/credit will be encouraged to take the Advanced Placement
-							Exam. A graphing calculator is required.</p>
+					</div>
+					<div class="page-link-wrap">
+						<div class="page_link">
+							<a href="index.html">Teach</a>
+						</div>
 					</div>
 				</div>
-			</div>
-			<!-- single-blog -->
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="single-amenities">
-					<div class="amenities-thumb">
-						<img class="img-fluid" height = 100 src="img/physics.jpg" alt="">
-					</div>
-					<div class="amenities-details">
-						<div class="amenities-meta">
-							<span>Mr. Rowzee's 3rd Period Class</span>
-						</div>
-						<h5><a href="#">AP Physics 1</a></h5>
-						<p>AP Physics 1 is an inquiry-based course designed to expand on the principles of how and why the
-							world around us works and find practical applications of physics through labs, data analysis, problem solving, and
-							discussions. Students will investigate the topics of motion, force, energy, momentum, waves, rotational motion,
-							electrostatics, and electricity. Students taking this course should be self-directed learners with strong mathcomputational skills..</p>
-					</div>
-				</div>
-			</div>
-			<!-- single-blog -->
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="single-amenities">
-					<div class="amenities-thumb">
-						<img class="img-fluid" src="img/lang.png" alt="">
-					</div>
-					<div class="amenities-details">
-						<div class="amenities-meta">
-							<span>Ms. Parato's 8th Period Class</span>
-						</div>
-						<h5><a href="#">AP Language and Composition</a></h5>
-						<p>Per the College Board description of the English Language and Composition course (2006), AP®
-							Language and Composition is a college-level course designed to prepare students to “become skilled
-							writers who compose for a variety of purposes, aware of the interactions among a writer’s purposes,
-							audience expectations, and subjects. An integral part of [this] course [is] the development of research
-							skills that enable [you] to evaluate, use, and cite source material.”</p>
+
+				<div class="col-lg-6 col-md-6 header-left">
+					<div class="">
+						<img class="img-fluid w-50" src="img/rachel.jpeg" alt="">
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
+	<!--================ End banner section =================-->
+
+	<!--================ Start Amenities Area =================-->
+	<section class="amenities-area section_gap_bottom">
+		<div class="container">
+			<div class="row align-items-end justify-content-left">
+				<div class="col-lg-5">
+					<div class="main_title">
+						<h1>Recently<br>Practicing</h1>
+						<p>The subjects that you've been working on the most this week.</p>
+					</div>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<!-- single-blog -->
+				<div class="col-lg-4 col-md-6 col-sm-6">
+					<div class="single-amenities">
+						<div class="amenities-thumb">
+							<img class="img-fluid" height = 100 src="img/calc.jpg" alt="">
+						</div>
+						<div class="amenities-details">
+							<div class="amenities-meta">
+								<span>Mrs. Moore's 1st Period Class</span>
+							</div>
+							<h5><a href="#">AP BC Calculus</a></h5>
+							<p>This course includes all topics covered in AP Calculus AB. Additional topics include sequences and series,
+								polar coordinates, vector functions, additional integration methods, and differential equations. Students
+								desiring two semesters of college placement/credit will be encouraged to take the Advanced Placement
+								Exam. A graphing calculator is required.</p>
+						</div>
+					</div>
+				</div>
+				<!-- single-blog -->
+				<div class="col-lg-4 col-md-6 col-sm-6">
+					<div class="single-amenities">
+						<div class="amenities-thumb">
+							<img class="img-fluid" height = 100 src="img/physics.jpg" alt="">
+						</div>
+						<div class="amenities-details">
+							<div class="amenities-meta">
+								<span>Mr. Rowzee's 3rd Period Class</span>
+							</div>
+							<h5><a href="#">AP Physics 1</a></h5>
+							<p>AP Physics 1 is an inquiry-based course designed to expand on the principles of how and why the
+								world around us works and find practical applications of physics through labs, data analysis, problem solving, and
+								discussions. Students will investigate the topics of motion, force, energy, momentum, waves, rotational motion,
+								electrostatics, and electricity. Students taking this course should be self-directed learners with strong mathcomputational skills..</p>
+						</div>
+					</div>
+				</div>
+				<!-- single-blog -->
+				<div class="col-lg-4 col-md-6 col-sm-6">
+					<div class="single-amenities">
+						<div class="amenities-thumb">
+							<img class="img-fluid" src="img/lang.png" alt="">
+						</div>
+						<div class="amenities-details">
+							<div class="amenities-meta">
+								<span>Ms. Parato's 8th Period Class</span>
+							</div>
+							<h5><a href="#">AP Language and Composition</a></h5>
+							<p>Per the College Board description of the English Language and Composition course (2006), AP®
+								Language and Composition is a college-level course designed to prepare students to “become skilled
+								writers who compose for a variety of purposes, aware of the interactions among a writer’s purposes,
+								audience expectations, and subjects. An integral part of [this] course [is] the development of research
+								skills that enable [you] to evaluate, use, and cite source material.”</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--================ End Amenities Area =================-->
+
+	<!--================ start footer Area  =================-->
+	<footer class="footer-area">
+		<div class="container">
+			<div class="row footer-top">
+				<div class="col-lg-3  col-md-6 col-sm-6">
+					<div class="single-footer-widget">
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6">
+					<div class="single-footer-widget">
+						<h6>Navigation Links</h6>
+						<div class="row">
+							<ul class="col footer-nav">
+								<li><a href="index.html">Home</a></li>
+								<li><a href="about-us.html">About Us</a></li>
+								<li><a href="contact.html">Contact</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3  col-md-6 col-sm-6">
+					<div class="single-footer-widget">
+						<h6>Us</h6>
+						<img src="img/tt-team.jpeg" height=100 alt="">
+						<p></p>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+		</div>
+		</div>
+		<div class="footer-bottom d-flex justify-content-between align-items-center flex-wrap">
+			<div class="container">
+				<div class="row justify-content-between">
+					<div>
+						<p class="footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+							Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+							<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+					</div>
+					<div class="footer-social d-flex align-items-center">
+						<a href="#"><i class="fa fa-facebook"></i></a>
+						<a href="#"><i class="fa fa-twitter"></i></a>
+						<a href="#"><i class="fa fa-dribbble"></i></a>
+						<a href="#"><i class="fa fa-behance"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!--================ End footer Area  =================-->
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="js/jquery-3.2.1.min.js"></script>
+	<script src="js/popper.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/stellar.js"></script>
+	<script src="vendors/nice-select/js/jquery.nice-select.min.js"></script>
+	<script src="vendors/isotope/imagesloaded.pkgd.min.js"></script>
+	<script src="vendors/isotope/isotope-min.js"></script>
+	<script src="vendors/owl-carousel/owl.carousel.min.js"></script>
+	<script src="vendors/jquery-ui/jquery-ui.js"></script>
+	<script src="js/jquery.ajaxchimp.min.js"></script>
+	<script src="js/mail-script.js"></script>
+	<script src="vendors/popup/jquery.magnific-popup.min.js"></script>
+	<script src="vendors/swiper/js/swiper.min.js"></script>
+	<script src="vendors/scroll/jquery.mCustomScrollbar.js"></script>
+	<script src="js/theme.js"></script>
+</body>
+
+</html>

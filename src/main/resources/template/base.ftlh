@@ -150,7 +150,7 @@
     <div class="side_menu">
         <div class="logo">
             <a href="index.html">
-                <img src="img/tt-icon.png" alt="" height=200>
+                <img src="/img/tt-icon.png" alt="" height=200>
             </a>
         </div>
         <ul class="list menu-left">
