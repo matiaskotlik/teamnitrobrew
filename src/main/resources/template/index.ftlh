@@ -13,7 +13,6 @@
                             Struggling in school? Get convenient, instant access to our active online tutors!
                             Or, sign up to become a tutor today!
                         </p>
-                    </font>
                     <a href="tutor?type=tutee" class="main_btn">
                         Tutee
                     </a>
@@ -36,7 +35,6 @@
 
                             <h5 style="color:rgb(144,175,119)" ">Welcome to Tutor Time!</h5>
                                 <p style="color:rgb(144,175,119)"">An introduction to our website</p>
-                            </font>
                         </div>
                     </div>
                 </div>
