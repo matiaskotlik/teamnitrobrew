@@ -82,8 +82,8 @@
                 onIceCandidate(caller, evt);
             };
             //onaddstream handler to receive remote feed and show in remoteview video element
-            caller.onaddstream = function(evt) {
-                console.log("onaddstream called");
+            caller.ontrack = function(evt) {
+                console.log("ontrack called");
                 if (window.URL) {
                     document.getElementById("remoteview").srcObject = evt.stream;
                 } else {
@@ -202,6 +202,16 @@
                     return channel.trigger("client-reject", {"room": msg.room, "rejected":id});
                 }
                 room = msg.room;
+                var sessionDesc = new RTCSessionDescription(msg.sdp);
+                caller.setRemoteDescription(sessionDesc).then(function() {
+                    caller.createAnswer().then(function(sdp) {
+                        caller.setLocalDescription(new RTCSessionDescription(sdp));
+                        channel.trigger("client-answer", {
+                            "sdp": sdp,
+                            "room": room
+                        });
+                    });
+                });
                 getCam()
                     .then(stream => {
                         localUserMedia = stream;
@@ -212,16 +222,6 @@
                             document.getElementById("selfview").src = stream;
                         }
                         caller.addStream(stream);
-                        var sessionDesc = new RTCSessionDescription(msg.sdp);
-                        caller.setRemoteDescription(sessionDesc);
-                        caller.createAnswer().then(function(sdp) {
-                            caller.setLocalDescription(new RTCSessionDescription(sdp));
-                            channel.trigger("client-answer", {
-                                "sdp": sdp,
-                                "room": room
-                            });
-                        });
-
                     })
                     .catch(error => {
                         console.log('an error occured', error);
