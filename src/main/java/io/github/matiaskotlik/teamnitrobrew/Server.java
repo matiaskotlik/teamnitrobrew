@@ -158,6 +158,23 @@ public class Server {
 			return render(getBase(req), "index.ftlh");
 		});
 
+		post("/login", (req, res) -> {
+			Map<String, Object> data = getBase(req);
+			String user = req.queryParams("uname");
+			if (user != null) {
+				String pass = req.queryParams("psw");
+				Account account = accountDatabase.getAll().stream().filter(a -> a.getUsername().equals(user))
+						.findAny().orElse(null);
+				if (account != null && pass != null) {
+					HashedPassword hp = account.getHashedPassword();
+					if (new PasswordHasher().check(pass, hp)) {
+						req.session().attribute("account", account);
+					}
+				}
+			}
+			return render(data, "index.ftlh");
+		});
+
 		get("/tutor", (req, res) -> {
 			Map<String, Object> map = getBase(req);
 			map.put("type", req.queryParamOrDefault("type", "tutee"));

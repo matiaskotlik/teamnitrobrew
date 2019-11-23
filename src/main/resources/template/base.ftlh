@@ -9,9 +9,9 @@
 <#macro scripts>
     <script src="/js/vendor/modernizr-3.7.1.min.js"></script>
     <script src="/js/jquery-3.2.1.min.js"></script>
-    <script src="/https://js.pusher.com/4.1/pusher.min.js"></script>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <script src="/js/main.js"></script>
-    <script src="/https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <script src="/js/jquery-3.2.1.min.js"></script>
     <script src="/js/popper.js"></script>
     <script src="/js/bootstrap.min.js"></script>
@@ -68,7 +68,7 @@
                                 <button type="button" onclick="document.getElementById('id01').style.display='none'"
                                         class="cancelbtn">Cancel
                                 </button>
-                                <span class="psw">Forgot <a href="#">password?</a></span>
+                                <span class="psw"><a href="#">Forgot password?</a></span>
                             </div>
                         </form>
                     </div>
@@ -157,14 +157,16 @@
             <li>
                 <a href="/">Home</a>
             </li>
+            <#if account??>
+                <li>
+                    <a href="/profile/${account.username}">My Profile</a>
+                </li>
+            </#if>
             <li>
-                <a href="packages.html">My Profile</a>
+                <a href="/about">About Us</a>
             </li>
             <li>
-                <a href="about-us.html">About Us</a>
-            </li>
-            <li>
-                <a href="contact.html">Contact Us</a>
+                <a href="/contact">Contact Us</a>
             </li>
         </ul>
     </div>

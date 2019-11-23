@@ -13,14 +13,14 @@
                     </p>
                     <div class="page-link-wrap">
                         <div class="page_link">
-                            <a href="index.html">Home</a>
+                            <a href="/">Home</a>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-lg-6 col-md-6 header-left">
                     <div class="">
-                        <img src="img/contact-icon.png" height=500 alt="">
+                        <img src="/img/contact-icon.png" height=500 alt="">
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                     </div>
                 </div>
                 <div class="col-lg-9">
-                    <form class="row contact_form" action="contact_process.php" method="post" id="contactForm"
+                    <form class="row contact_form" id="contactForm"
                         novalidate="novalidate">
                         <div class="col-md-6">
                             <div class="form-group">

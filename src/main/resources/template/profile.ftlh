@@ -16,12 +16,12 @@
                 </#if>
                 <div class="page-link-wrap">
                     <div class="page_link">
-                        <a href="index.html">Learn</a>
+                        <a href="/">Learn</a>
                     </div>
                 </div>
                 <div class="page-link-wrap">
                     <div class="page_link">
-                        <a href="index.html">Teach</a>
+                        <a href="/">Teach</a>
                     </div>
                 </div>
             </div>
@@ -67,7 +67,8 @@
                     </div>
                 </#items>
             </div>
-        </div>
+        </divRachel Yao
+>
     </section>
 <#else>
 </#list>
