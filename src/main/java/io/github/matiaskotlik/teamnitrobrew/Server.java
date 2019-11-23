@@ -175,6 +175,16 @@ public class Server {
 			return render(data, "index.ftlh");
 		});
 
+		get("/contact", (req, res) -> {
+			Map<String, Object> map = getBase(req);
+			return render(map, "contact.ftlh");
+		});
+
+		get("/about", (req, res) -> {
+			Map<String, Object> map = getBase(req);
+			return render(map, "about.ftlh");
+		});
+
 		get("/tutor", (req, res) -> {
 			Map<String, Object> map = getBase(req);
 			map.put("type", req.queryParamOrDefault("type", "tutee"));

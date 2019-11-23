@@ -73,7 +73,7 @@
                         <div class="col-md-12 text-right">
                             <button type="submit" value="submit" class="main_btn">
                                 Send Message
-                                <img src="img/next.png" alt="">
+                                <img src="/img/next.png" alt="">
                             </button>
                         </div>
                     </form>
