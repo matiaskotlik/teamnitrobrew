@@ -114,6 +114,14 @@ public class Account {
 		this.blogs = blogs;
 	}
 
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+
 	public void updateFunds(double amt) {
 		funds += amt;
 	}

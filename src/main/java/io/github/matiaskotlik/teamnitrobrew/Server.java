@@ -159,7 +159,9 @@ public class Server {
 		});
 
 		get("/tutor", (req, res) -> {
-			return render(getBase(req), "tutor.ftlh");
+			Map<String, Object> map = getBase(req);
+			map.put("type", req.queryParamOrDefault("type", "tutee"));
+			return render(map, "tutor.ftlh");
 		});
 
 		get("/profile/:user", (req, res) -> {
@@ -168,8 +170,10 @@ public class Server {
 			Map<String, Object> data = getBase(req);
 			if (acc != null) {
 				data.put("user", acc);
+				return render(data, "profile.ftlh");
 			}
-			return render(data, "profile.ftlh");
+			res.status(404);
+			return render(data, "404.ftlh");
 		});
 
 		post("/rate", (req, res) -> {
@@ -187,8 +191,9 @@ public class Server {
 			return "";
 		});
 
-		post("/search", (req, res) -> {
+		post("/videocall", (req, res) -> {
 			String am = req.queryParams("type");
+			System.out.println(am);
 			String looking;
 			String subject = req.queryParams("subject");
 			String id = "";
@@ -205,11 +210,12 @@ public class Server {
 					break;
 				default:
 					res.status(404);
-					return "";
+					return render(getBase(req), "404.ftlh");
 			}
 			String room = getRoom(subject, am, looking);
 			res.redirect("/videocall?room=" + room + "&role=" + am);
-			return "";
+			System.out.println(am + ", " + looking);
+			return "asdf";
 		});
 
 		get("/videocall", (req, res) -> {

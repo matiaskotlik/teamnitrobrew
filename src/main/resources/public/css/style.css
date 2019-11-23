@@ -3639,9 +3639,7 @@ h6 {
 /*  End Footer Area CSS
 /* =================================== */
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
+body {font-family: Arial, Helvetica, sans-serif;}
 
 /* Full-width input fields */
 input[type=text], input[type=password] {
@@ -3697,7 +3695,7 @@ span.psw {
 }
 
 /* The Modal (background) */
-.modal {
+.modal-big {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -3706,8 +3704,8 @@ span.psw {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
   padding-top: 60px;
 }
 
@@ -3742,21 +3740,13 @@ span.psw {
 }
 
 @-webkit-keyframes animatezoom {
-  from {
-    -webkit-transform: scale(0)
-  }
-  to {
-    -webkit-transform: scale(1)
-  }
+  from {-webkit-transform: scale(0)}
+  to {-webkit-transform: scale(1)}
 }
 
 @keyframes animatezoom {
-  from {
-    transform: scale(0)
-  }
-  to {
-    transform: scale(1)
-  }
+  from {transform: scale(0)}
+  to {transform: scale(1)}
 }
 
 /* Change styles for span and cancel button on extra small screens */
@@ -3765,11 +3755,40 @@ span.psw {
     display: block;
     float: none;
   }
-
   .cancelbtn {
     width: 100%;
   }
 }
+
+.form-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-container * {
+  z-index: 999;
+}
+
+.form-container > div {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+form.modal-content {
+  max-width: 600px;
+}
+
+.modal-big {
+    z-index: 999999;
+}
+
+form.modal-content .login-btn.container > * {
+  margin-left: 10px;
+}
+
 /*---------------------------------------------------- */
 .myList {
   z-index:9}
