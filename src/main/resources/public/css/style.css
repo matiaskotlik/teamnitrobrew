@@ -617,7 +617,7 @@ button:focus {
 /* common banner Area css
 ============================================================================================ */
 .home-banner-area.common-banner {
-  max-height: 450px; }
+  }
   @media (max-width: 1920px) {
     .home-banner-area.common-banner .header-right {
       padding-right: 7.5%; } }
