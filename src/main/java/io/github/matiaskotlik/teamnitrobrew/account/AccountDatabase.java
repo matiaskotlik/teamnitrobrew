@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AccountDatabase extends Database<Account> {
@@ -34,6 +35,7 @@ public class AccountDatabase extends Database<Account> {
 			System.err.println("Error reading from file at " + storageFile.getPath());
 			throw new RuntimeException(e);
 		}
+		accounts = Collections.synchronizedList(accounts);
 	}
 
 	@Override

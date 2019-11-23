@@ -185,23 +185,47 @@ public class Server {
 			return render(getBase(req), "index.ftlh");
 		});
 
+		get("/tutor", (req, res) -> {
+			return render(getBase(req), "tutor.ftlh");
+		});
+
+		post("/rate", (req, res) -> {
+			String id = req.queryParams("id");
+			int rate = Integer.parseInt(req.queryParams("rate"));
+			accountDatabase.getAll().stream().filter(a -> a.getId().equals(id)).findAny()
+					.ifPresent(a -> {
+						if (rate > 2) {
+							a.setFunds(a.getFunds() + 2);
+						}
+						a.updateAvgRating(rate);
+					});
+
+			res.redirect("/");
+			return "";
+		});
+
 		post("/search", (req, res) -> {
 			String am = req.queryParams("type");
 			String looking;
 			String subject = req.queryParams("subject");
+			String id = "";
 			switch (am) {
 				case "tutor":
 					looking = "tutee";
 					break;
 				case "tutee":
 					looking = "tutor";
+					Account account = req.session().attribute("account");
+					if (account != null) {
+						id = "&id=" + account.getId();
+					}
 					break;
 				default:
 					res.status(404);
 					return "";
 			}
 			String room = getRoom(subject, am, looking);
-			res.redirect("/videocall?room=" + room);
+			res.redirect("/videocall?room=" + room + "&role=" + am);
 			return "";
 		});
 
