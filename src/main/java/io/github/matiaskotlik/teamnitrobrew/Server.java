@@ -2,6 +2,7 @@ package io.github.matiaskotlik.teamnitrobrew;
 
 import com.pusher.rest.Pusher;
 import com.pusher.rest.data.PresenceUser;
+import com.pusher.rest.data.Result;
 import freemarker.template.Configuration;
 import freemarker.template.Version;
 import io.github.matiaskotlik.teamnitrobrew.account.Account;
@@ -16,12 +17,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static spark.Spark.*;
 
@@ -47,7 +48,8 @@ public class Server {
 	private FreeMarkerEngine engine;
 	private AccountDatabase accountDatabase;
 	private PasswordHasher passwordHasher;
-	private Map<String, String> rooms;
+	private Map<String, String> tutorRooms;
+	private Map<String, String> tuteeRooms;
 
 	public Server(int port, boolean debug) {
 		this.port = port;
@@ -56,6 +58,9 @@ public class Server {
 
 	public void start() {
 		port(port);
+
+		tutorRooms = new ConcurrentHashMap<>();
+		tuteeRooms = new ConcurrentHashMap<>();
 
 		// static files
 		String projectDir = System.getProperty("user.dir");
@@ -154,20 +159,52 @@ public class Server {
 		return attributes;
 	}
 
+	private boolean isAvailibleRoom(String room) {
+		Result result = pusher.get("/channels/presence-videocall-" + room, Collections.singletonMap("info", "user_count"));
+		if (result.getStatus() == Result.Status.SUCCESS) {
+			String channelListJson = result.getMessage();
+			int users = Integer.parseInt(Arrays.stream(channelListJson.split(":")).reduce((first, second) -> second)
+					.orElse("0").replace("}", ""));
+			return users == 1;
+		}
+		return false;
+	}
+
 	private void makePaths() {
 		get("/", (req, res) -> {
 			return render(getBase(req), "index.ftlh");
 		});
 
 		post("/search", (req, res) -> {
+			String room;
+			String subject = req.queryParams("subject");
 			switch (req.queryParams("type")) {
-				"tutor":
-
-				"tutee":
-
+				case "tutor":
+					room = tuteeRooms.remove(subject);
+					if (room != null && !isAvailibleRoom(room)) {
+						room = null;
+					}
+					if (room == null) {
+						room = genRoom();
+						tutorRooms.put(subject, room);
+					}
+					break;
+				case "tutee":
+					room = tutorRooms.remove(subject);
+					if (room != null && !isAvailibleRoom(room)) {
+						room = null;
+					}
+					if (room == null) {
+						room = genRoom();
+						tuteeRooms.put(subject, room);
+					}
+					break;
 				default:
-					return res.status(404);
+					res.status(404);
+					return "";
 			}
+			res.redirect("/videocall?room=" + room);
+			return "";
 		});
 
 		get("/videocall", (req, res) -> {
@@ -181,6 +218,10 @@ public class Server {
 		internalServerError((req, res) -> {
 			return render(getBase(req), "500.ftlh");
 		});
+	}
+
+	public String genRoom() {
+		return UUID.randomUUID().toString();
 	}
 
 	public String render(Map<String, Object> attributes, String templatePath) {

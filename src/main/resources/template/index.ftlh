@@ -6,7 +6,7 @@
 </#macro>
 
 <#macro page_body>
-    <form action="/search">
+    <form action="/search" method="post">
         <select name="subject" id="subject">
             <option value="math">Math</option>
             <option value="english">English</option>
@@ -15,8 +15,11 @@
             <option value="physics">Physics</option>
             <option value="spanish">Spanish</option>
         </select>
-        <input type="radio" name="type" value="tutee" checked>Tutee<br>
-        <input type="radio" name="type" value="tutor">Tutor<br>
+        <div>
+            <input type="radio" name="type" value="tutee" checked>Tutee<br>
+            <input type="radio" name="type" value="tutor">Tutor<br>
+        </div>
+        <input type="submit" value="Search">
     </form>
 </#macro>
 

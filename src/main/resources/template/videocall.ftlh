@@ -6,15 +6,9 @@
 
 <#macro page_body>
     <div id="app">
-        <span id="myid"> </span>
         <video id="selfview"></video>
         <video id="remoteview"></video>
         <button id="endCall" style="display: none;" onclick="endCurrentCall()">End Call </button>
-        <div id="list">
-            <ul id="users">
-
-            </ul>
-        </div>
     </div>
     <div id="cover">
         <p>Waiting on a tutor/tutee...</p>
@@ -45,27 +39,20 @@
         const channel = pusher.subscribe('presence-videocall-' + getUrlParameter("room"));
 
         channel.bind('pusher:subscription_succeeded', (members) => {
-            members.each((member) => {
-                if (member.id != channel.members.me.id) {
-                    callUser(member.id);
-                    go();
-                    return;
-                }
-            });
         });
 
         channel.bind('pusher:member_added', (member) => {
-            // users.push(member.id)
-            // render();
+            setTimeout(() => {
+                callUser(member.id);
+                go();
+            }, 200);
         });
 
         channel.bind('pusher:member_removed', (member) => {
             // // for remove member from list:
             // var index = users.indexOf(member.id);
             // users.splice(index, 1);
-            if(member.id==room){
-                endCall();
-            }
+            endCall();
             // render();
         });
 
@@ -207,6 +194,7 @@
         channel.bind("client-sdp", function(msg) {
             if(msg.room == id){
                 console.log("sdp received");
+                go();
                 room = msg.room;
                 var sessionDesc = new RTCSessionDescription(msg.sdp);
                 caller.setRemoteDescription(sessionDesc).then(function() {
