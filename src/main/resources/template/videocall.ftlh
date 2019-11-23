@@ -19,6 +19,8 @@
 </#macro>
 
 <#macro scripts>
+    {{ parent() }}
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <script>
         Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
             get: function(){
