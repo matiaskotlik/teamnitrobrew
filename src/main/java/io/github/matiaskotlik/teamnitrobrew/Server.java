@@ -8,6 +8,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Version;
 import io.github.matiaskotlik.teamnitrobrew.account.Account;
 import io.github.matiaskotlik.teamnitrobrew.account.AccountDatabase;
+import io.github.matiaskotlik.teamnitrobrew.crypt.HashedPassword;
 import io.github.matiaskotlik.teamnitrobrew.crypt.PasswordHasher;
 import spark.ModelAndView;
 import spark.Request;
@@ -17,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -100,9 +103,6 @@ public class Server {
 
 		makePaths();
 		makePusherPaths();
-		if (debug) {
-			makeDebugPaths();
-		}
 	}
 
 	private void makePusherPaths() {
@@ -113,33 +113,6 @@ public class Server {
 				String id = UUID.randomUUID().toString() + new Date().toString();
 				PresenceUser presenceUser = new PresenceUser(id.hashCode());
 				return pusher.authenticate(socket_id, channel_name, presenceUser);
-			});
-		});
-	}
-
-	private void makeDebugPaths() {
-		path("/debug", () -> {
-			get("/save", (req, res) -> {
-				accountDatabase.save();
-
-				return "Saved!";
-			});
-			get("/load", (req, res) -> {
-				accountDatabase.load();
-
-				return "Loaded!";
-			});
-			get("/add", (req, res) -> {
-				accountDatabase.getList().add(new Account("matias",
-						passwordHasher.getHashedPassword("password")));
-				return "added matias:password to list";
-			});
-			get("/session", (req, res) -> {
-				StringBuilder listString = new StringBuilder();
-				for (String key : req.session().attributes()) {
-					listString.append(key).append(": ").append(req.session().attribute(key).toString()).append("<br />");
-				}
-				return listString.toString();
 			});
 		});
 	}
@@ -186,7 +159,21 @@ public class Server {
 		});
 
 		get("/tutor", (req, res) -> {
-			return render(getBase(req), "tutor.ftlh");
+			Map<String, Object> map = getBase(req);
+			map.put("type", req.queryParamOrDefault("type", "tutee"));
+			return render(map, "tutor.ftlh");
+		});
+
+		get("/profile/:user", (req, res) -> {
+			String user = req.params("user");
+			Account acc = accountDatabase.getAll().stream().filter(a -> a.getUsername().equals(user)).findAny().orElse(null);
+			Map<String, Object> data = getBase(req);
+			if (acc != null) {
+				data.put("user", acc);
+				return render(data, "profile.ftlh");
+			}
+			res.status(404);
+			return render(data, "404.ftlh");
 		});
 
 		post("/rate", (req, res) -> {
@@ -199,13 +186,14 @@ public class Server {
 						}
 						a.updateAvgRating(rate);
 					});
-
+			accountDatabase.save();
 			res.redirect("/");
 			return "";
 		});
 
-		post("/search", (req, res) -> {
+		post("/videocall", (req, res) -> {
 			String am = req.queryParams("type");
+			System.out.println(am);
 			String looking;
 			String subject = req.queryParams("subject");
 			String id = "";
@@ -222,11 +210,12 @@ public class Server {
 					break;
 				default:
 					res.status(404);
-					return "";
+					return render(getBase(req), "404.ftlh");
 			}
 			String room = getRoom(subject, am, looking);
 			res.redirect("/videocall?room=" + room + "&role=" + am);
-			return "";
+			System.out.println(am + ", " + looking);
+			return "asdf";
 		});
 
 		get("/videocall", (req, res) -> {

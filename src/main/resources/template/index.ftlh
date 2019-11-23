@@ -15,10 +15,10 @@
                             Or, sign up to become a tutor today!
                         </p>
                     </font>
-                    <a href="tutee.html" class="main_btn">
+                    <a href="tutor?type=tutee" class="main_btn">
                         Tutee
                     </a>
-                    <a href="tutor.html" class="main_btn">
+                    <a href="tutor?type=tutor" class="main_btn">
                         Tutor
 
                     </a>
@@ -26,7 +26,7 @@
 
                 <div class="col-lg-6 col-md-6 header-left">
                     <div class="">
-                        <img class="img-fluid w-100" src="img/tt-icon.png" alt="">
+                        <img class="img-fluid w-100" src="/img/tt-icon.png" alt="">
                     </div>
                     <div class="video-popup d-flex align-items-center">
                         <a class="play-video video-play-button animate" href="https://www.youtube.com/watch?v=XiNR1YaAoZU" data-animate="zoomIn"
