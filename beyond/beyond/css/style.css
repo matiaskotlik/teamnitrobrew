@@ -190,7 +190,7 @@ button:focus {
     -o-transition: all 200ms ease;
     transition: all 200ms ease;
     box-shadow: 0px 10px 30px rgba(39, 0, 110, 0.3);
-    background: #4681ff; }
+    background: #90AF77; }
   .video-play-button span {
     display: block;
     position: relative;
@@ -377,7 +377,7 @@ button:focus {
         transition: all 0.3s ease 0s; }
         .side_menu .menu-left li a:hover,
         .side_menu .menu-left li .dropdown-toggle:hover {
-          color: #4681ff; }
+          color: #90AF77; }
       .side_menu .menu-left li .dropdown-toggle {
         background: transparent;
         border: 0;
@@ -390,7 +390,7 @@ button:focus {
         top: -36px !important;
         left: 110px !important;
         border: 0;
-        background: #4681ff;
+        background: #90AF77;
         border-radius: 0px; }
         .side_menu .menu-left li .dropdown-menu a {
           color: #fff;
@@ -810,7 +810,7 @@ button:focus {
     font-family: "Playfair Display", serif;
     margin-bottom: 10px; }
   .counter_area .single_counter:hover {
-    background: #4681ff;
+    background: #90AF77;
     color: #fff;
     border: 1px solid transparent; }
     .counter_area .single_counter:hover .thumb img {
@@ -1116,7 +1116,7 @@ button:focus {
       .contact-form-section .form-select .nice-select .list .option:hover {
         color: #f8b600; }
   .contact-form-section .main_btn {
-    border-color: #4681ff;
+    border-color: #90AF77;
     color: #fff;
     cursor: pointer;
     margin-top: 30px; }
@@ -1130,8 +1130,8 @@ button:focus {
         .contact-form-section .main_btn img {
           display: none; } }
     .contact-form-section .main_btn:hover {
-      background: #4681ff;
-      border-color: #4681ff;
+      background: #90AF77;
+      border-color: #90AF77;
       color: #fff; }
 
 /* Start Testimonial Area css
