@@ -2,6 +2,37 @@
 
 <#macro page_head>
     <title>Team Nitrobrew</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            height: 100%;
+        }
+        #app {
+            display: flex;
+            margin: 0;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 0 50px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        video {
+            display: block;
+            max-width: 500px;
+            margin: 0;
+            box-sizing: border-box;
+            border-radius: 2px;
+            padding: 0;
+            box-shadow: rgba(156, 172, 172, 0.2) 0px 2px 2px, rgba(156, 172, 172, 0.2) 0px 4px 4px, rgba(156, 172, 172, 0.2) 0px 8px 8px, rgba(156, 172, 172, 0.2) 0px 16px 16px, rgba(156, 172, 172, 0.2) 0px 32px 32px, rgba(156, 172, 172, 0.2) 0px 64px 64px;
+        }
+        .bbpanel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 </#macro>
 
 <#macro page_body>
@@ -9,26 +40,11 @@
         <video id="selfview"></video>
         <video id="remoteview"></video>
     </div>
+    <div class="bbpanel">
+        <button style="width: 100px" class="btn-sm button" onclick="endCurrentCall()">End Call</button>
+    </div>
     <div id="cover">
         <p>Waiting on a tutor/tutee...</p>
-    </div>
-    <div id="rating-modal" class="modal">
-        <form action="/rate" method="post">
-            <div class="rate">
-                <input type="radio" id="star5" name="rate" value="5"/>
-                <label for="star5" title="text">5 stars</label>
-                <input type="radio" id="star4" name="rate" value="4"/>
-                <label for="star4" title="text">4 stars</label>
-                <input type="radio" id="star3" name="rate" value="3"/>
-                <label for="star3" title="text">3 stars</label>
-                <input type="radio" id="star2" name="rate" value="2"/>
-                <label for="star2" title="text">2 stars</label>
-                <input type="radio" id="star1" name="rate" value="1"/>
-                <label for="star1" title="text">1 star</label>
-            </div>
-            <input id="tutor-id" type="hidden" value="">
-            <input type="submit" value="Submit rating">
-        </form>
     </div>
 </#macro>
 
@@ -70,7 +86,7 @@
         var pusher = new Pusher("d964cc6cb9f216c957f8", {
             cluster: "us2",
             encrypted: true,
-            authEndpoint: "/pusher/auth"
+            // authEndpoint: "/pusher/auth"
         });
         let role = getUrlParameter("role");
         let id, tutorId, sessionDesc, room, caller, localUserMedia;
@@ -87,14 +103,25 @@
 
         channel.bind('pusher:member_added', (member) => {
             console.log("ADDED: " + member.id);
+            // startWebRTC(false);
         });
 
         channel.bind('pusher:member_removed', (member) => {
             endCurrentCall();
         });
 
+        channel.bind('client-tid', (data) => {
+            tutorId = data.id;
+        });
+
         function endCurrentCall() {
             console.log("ending call");
+            pc.close();
+            if (role === "tutee") {
+                window.location = "/rate?id=" + tutorId;
+            } else {
+                window.location = "/";
+            }
         }
 
         function getCam() {
@@ -143,9 +170,14 @@
 
             // When a remote stream arrives display it in the #remoteVideo element
             pc.ontrack = event => {
+                console.log('ontrak');
                 const stream = event.streams[0];
                 if (!remoteVideo.srcObject || remoteVideo.srcObject.id !== stream.id) {
                     remoteVideo.srcObject = stream;
+                }
+
+                if (role === "tutor") {
+                    channel.trigger("client-tid", {id: getUrlParameter("id")});
                 }
             };
 
@@ -155,13 +187,14 @@
             }).then(stream => {
                 // Display your local video in #localVideo element
                 selfVideo.srcObject = stream;
-                go();
                 // Add your stream to be sent to the conneting peer
-                stream.getTracks().forEach(track => pc.addTrack(track, stream));
+                let sender;
+                stream.getTracks().forEach(track => sender = pc.addTrack(track, stream));
             }, e => { console.error(e) });
 
             channel.bind('client-onicecandidate', (data) => {
                 console.log("onice");
+                go();
                 pc.addIceCandidate(
                     new RTCIceCandidate(data.candidate)
                 );
@@ -169,6 +202,7 @@
 
             channel.bind('client-onsdp', (data) => {
                 console.log("onsdp");
+                go();
                 pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(() => {
                     // When receiving an offer lets answer it
                     if (pc.remoteDescription.type === 'offer') {

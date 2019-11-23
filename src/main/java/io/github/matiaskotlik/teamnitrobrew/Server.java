@@ -126,7 +126,7 @@ public class Server {
 	private String getRoom(String subject, String am, String looking) {
 		Result result = pusher.get("/channels",
 				new HashMap<String, String>() {{
-						put("filter_by_prefix", "presence-" + subject + "-" + looking);
+						put("filter_by_prefix", "presence-" + subject + "-" + looking + "-");
 						put("info", "user_count");
 					}});
 		if (result.getStatus() == Result.Status.SUCCESS) {
@@ -145,7 +145,7 @@ public class Server {
 					return e.getKey();
 				}
 			}
-			return "presence-" + subject + "-" + am + UUID.randomUUID().toString();
+			return "presence-" + subject + "-" + am + "-" + UUID.randomUUID().toString();
 		}
 		return "presence-error";
 	}
@@ -200,6 +200,16 @@ public class Server {
 			return render(data, "404.ftlh");
 		});
 
+		get("/rate", (req, res) -> {
+			String id = req.queryParams("id");
+			Account acc = accountDatabase.getAll().stream().filter(a -> a.getId().equals(id)).findAny().orElse(null);
+			if (acc != null) {
+				acc.updateAvgRating(Integer.parseInt(req.queryParams("rate")));
+			}
+			res.redirect("/");
+			return "";
+		});
+
 		post("/rate", (req, res) -> {
 			String id = req.queryParams("id");
 			int rate = Integer.parseInt(req.queryParams("rate"));
@@ -217,7 +227,6 @@ public class Server {
 
 		post("/videocall", (req, res) -> {
 			String am = req.queryParams("type");
-			System.out.println(am);
 			String looking;
 			String subject = req.queryParams("subject");
 			String id = "";
@@ -238,7 +247,6 @@ public class Server {
 			}
 			String room = getRoom(subject, am, looking);
 			res.redirect("/videocall?room=" + room + "&role=" + am + id);
-			System.out.println(am + ", " + looking);
 			return "asdf";
 		});
 

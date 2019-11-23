@@ -19,7 +19,6 @@
     <script src="/js/vendor/modernizr-3.7.1.min.js"></script>
     <script src="/js/jquery-3.2.1.min.js"></script>
     <script src="/js/main.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <script src="/js/jquery-3.2.1.min.js"></script>
     <script src="/js/popper.js"></script>
     <script src="/js/bootstrap.min.js"></script>
@@ -221,7 +220,6 @@
         <link rel="apple-touch-icon" href="icon.png">
 
         <link href="css/material-icons.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css"/>
 
         <link rel="icon" href="img/tt-icon.png" type="image/png">
 
