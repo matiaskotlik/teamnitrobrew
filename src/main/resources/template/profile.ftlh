@@ -11,9 +11,12 @@
                 <p class="pt-20">
                    ${ user.desc }
                 </p>
-                <#if account?? && account.id == user.id>
-                    <p class="pt-20">Cash Earned: ${ user.funds?string.currency }</p>
-                </#if>
+                <div>
+                    <p class="pt-20">Average rating: ${ user.averageRating }</p>
+                    <#if account?? && account.id == user.id>
+                        <p class="pt-20">Cash Earned: ${ user.funds?string.currency }</p>
+                    </#if>
+                </div>
                 <div class="page-link-wrap">
                     <div class="page_link">
                         <a href="/">Learn</a>
@@ -25,7 +28,6 @@
                     </div>
                 </div>
             </div>
-            <div style="margin-bottom: 5px"></div>
             <div class="col-lg-6 col-md-6 header-left">
                 <div class="">
                     <img class="img-fluid w-50" src="/img/${ user.img }" alt="">

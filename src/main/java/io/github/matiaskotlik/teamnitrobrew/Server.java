@@ -9,7 +9,6 @@ import freemarker.template.Version;
 import io.github.matiaskotlik.teamnitrobrew.account.Account;
 import io.github.matiaskotlik.teamnitrobrew.account.AccountDatabase;
 import io.github.matiaskotlik.teamnitrobrew.crypt.HashedPassword;
-import io.github.matiaskotlik.teamnitrobrew.crypt.PasswordHasher;
 import spark.ModelAndView;
 import spark.Request;
 import spark.template.freemarker.FreeMarkerEngine;
@@ -49,7 +48,6 @@ public class Server {
 	private Pusher pusher;
 	private FreeMarkerEngine engine;
 	private AccountDatabase accountDatabase;
-	private PasswordHasher passwordHasher;
 
 	public Server(int port, boolean debug) {
 		this.port = port;
@@ -97,7 +95,6 @@ public class Server {
 		}
 
 		engine = new FreeMarkerEngine(configuration);
-		passwordHasher = new PasswordHasher();
 		accountDatabase = new AccountDatabase();
 		accountDatabase.load();
 
@@ -166,13 +163,13 @@ public class Server {
 				Account account = accountDatabase.getAll().stream().filter(a -> a.getUsername().equals(user))
 						.findAny().orElse(null);
 				if (account != null && pass != null) {
-					HashedPassword hp = account.getHashedPassword();
-					if (new PasswordHasher().check(pass, hp)) {
+					if (account.getHashedPassword().verify(pass)) {;
 						req.session().attribute("account", account);
 					}
 				}
 			}
-			return render(data, "index.ftlh");
+			res.redirect("/");
+			return "";
 		});
 
 		get("/contact", (req, res) -> {

@@ -2,7 +2,9 @@
   {
     "id": "ae96e29a-c991-4365-84e7-12b24baf03b8",
     "username": "rachel",
-    "hashedPassword": "d7BzwLKXb+NmX7HXfzQRXA==$qwyFOCi9e/1iYXzohEOu6w==$16",
+    "hashedPassword": {
+      "hash": "$2a$16$O6/uTHMG9uUcGiRfrPNLJuU6/J5XLc6ombEpOCSAOW3zOu.N5zBja"
+    },
     "fullname": "Rachel Yao",
     "desc": "I am a student at Naperville North High School. I enjoy art and computer science. I created Tutor Time with my teammates in order to provide a platform for high school students to get easy and instant access to tutoring without having to schedule ahead of the time.",
     "img": "rachel.jpeg",
